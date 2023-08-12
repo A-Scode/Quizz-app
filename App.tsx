@@ -4,7 +4,7 @@
  *
  * @format
  */
-
+import 'react-native-gesture-handler';
 import React, { useMemo, useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {

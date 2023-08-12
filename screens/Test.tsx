@@ -5,12 +5,14 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useQuery } from "react-query"
 import { useRoute, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Question from "./question";
+import Question from "./Question";
+import { createStackNavigator } from "@react-navigation/stack";
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 
 export const styles = StyleSheet.create({
     mainContainer:{
         flex: 1,
-        padding: 20,
+        padding: 10,
         gap: 20,
     },
     text:{
@@ -34,20 +36,20 @@ export default function Test(){
     
     const {Score , handleScoreChange} = useRoute().params;
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createStackNavigator();
 
     return (
         <ScrollView contentContainerStyle={styles.mainContainer}>
             <View style={styles.viewHeading}>
                 <Text style={styles.textHeading}>User 1</Text>
             </View>
-            <View style={{flex:1}}>
+            <ScrollView style={{gap:20 , flex:1}} >
             
             {
                 !isLoading && data.results.map((item, index)=>(<Question key={index} question={item} />))
             }
             
-            </View>
+            </ScrollView>
         </ScrollView>
     )
 }
