@@ -8,6 +8,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Question from "./Question";
 import { createStackNavigator } from "@react-navigation/stack";
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import { Button } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 export const styles = StyleSheet.create({
     mainContainer:{
@@ -30,26 +32,45 @@ export const styles = StyleSheet.create({
 })
 
 
-export default function Test(){
+export default function Test({navigation , Score , handleScoreChange }){
 
-    const {isLoading , data , error} = useQuery("questions" , ()=>fetch("https://opentdb.com/api.php?amount=5").then(res=>res.json()));
+    const {user} = useRoute().params;
+    console.log(user)
+
+    const {isLoading , data , error} = useQuery("questions" , ()=>fetch("https://opentdb.com/api.php?amount=10").then(res=>res.json()));
     
-    const {Score , handleScoreChange} = useRoute().params;
+    // const {Score , handleScoreChange , user} = useRoute().params;
+
+    useEffect( ()=>{console.log(data?.results)}, [data])
 
     const Stack = createStackNavigator();
+    // const navigate = useNavigation();
+
+    useEffect(()=>{console.log(Score)} , [Score])
 
     return (
         <ScrollView contentContainerStyle={styles.mainContainer}>
+            <View ><Text style={{color:"black"}}>{JSON.stringify(Score,undefined,4)}</Text></View>
             <View style={styles.viewHeading}>
-                <Text style={styles.textHeading}>User 1</Text>
+                <Text style={styles.textHeading}>{user==="user1"?"User 1":"User 2"}</Text>
             </View>
-            <ScrollView style={{gap:20 , flex:1}} >
+            <ScrollView  contentContainerStyle={{justifyContent: 'space-between',}} style={{gap:20 , flex:1}} >
             
             {
-                !isLoading && data.results.map((item, index)=>(<Question key={index} question={item} />))
+                !isLoading && data.results.map(
+                    (item:any, index:any)=>(<Question key={index} Score={Score} handleScoreChange={handleScoreChange} user={user} question={item} />)
+                    )
             }
             
             </ScrollView>
+            <View>
+                <Button 
+                title="Submit and start User 2"
+                onPress={()=>navigation.push("Test" , {
+                    user:"user2"
+                })}
+                />
+            </View>
         </ScrollView>
     )
 }

@@ -65,7 +65,9 @@ function App(): JSX.Element {
         <Stack.Navigator screenOptions={{headerStyle:{
           backgroundColor:Colors.dark,
         }, headerTitleStyle:{color:Colors.white,}}} >
-          <Stack.Screen name="Test"  component={Test} initialParams={{handleScoreChange , Score}} />
+          <Stack.Screen name="Test" initialParams={{user:"user1"}}>
+            {props=><Test {...props} Score={Score} handleScoreChange={handleScoreChange} />}
+            </Stack.Screen>
           <Stack.Screen name="Tie Breaker"  component={TieBreaker}/>
         </Stack.Navigator>
       </NavigationContainer>

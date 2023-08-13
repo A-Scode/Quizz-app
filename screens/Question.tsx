@@ -3,11 +3,109 @@ import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { styles } from './Test';
-function Question({question}) {
+import { Button } from 'react-native';
+import { useEffect , useState } from 'react';
+import RadioGroup,{ RadioButton , RadioButtonProps } from 'react-native-radio-buttons-group';
+function Question({question , Score , handleScoreChange , user}) {
+
+    const [options , setOptions]  = useState<RadioButtonProps[]>([]);
+    const [answer , setAnswer] = useState<string|undefined>("1");
+
+    useEffect( ()=>{
+
+        if ( question.type === "boolean"){
+            setOptions([
+            {
+                id: '1', // acts as primary key, should be unique and non-empty string
+                label: 'True',
+                value: 'True',
+                labelStyle:{ color :"black"},
+            },
+            {
+                id: '2', // acts as primary key, should be unique and non-empty string
+                label: 'False',
+                value: 'False',
+                labelStyle:{ color :"black"}
+            },
+        ])
+        }else{
+            let opt = [ question.correct_answer, ...question.incorrect_answers]
+            let radioOpitons:RadioButtonProps[] = [];
+            opt.map((item, i)=>{radioOpitons.push({
+                id : String(i+1),
+                label: item,
+                value : item,
+                labelStyle: {color:"black" , flexWrap:"wrap"}
+            })})
+
+            setOptions(radioOpitons);
+        }
+
+
+    }, [question])
+
+    useEffect(()=>{
+        let ans = options.find((item)=>item.id === answer);
+        if ( ans?.value === question.correct_answer){
+            user==="user1"?
+            handleScoreChange({
+                ...Score ,
+                user1:{
+                    ...Score.user1,
+                    correct : Score.user1.correct+1,
+                    score : Score.user1.score+5
+                }
+            })
+            :
+            handleScoreChange({
+                ...Score ,
+                user2:{
+                    ...Score.user2,
+                    correct : Score.user2.correct+1,
+                    score : Score.user2.score+5
+                }
+
+            })
+        }else{
+            user==="user1"?
+            handleScoreChange({
+                ...Score ,
+                user1:{
+                    ...Score.user1,
+                    incorrect : Score.user1.incorrect+1,
+                    score : Score.user1.score-2
+                }
+            })
+            :
+            handleScoreChange({
+                ...Score ,
+                user2:{
+                    ...Score.user2,
+                    incorrect : Score.user2.incorrect+1,
+                    score : Score.user2.score-2
+                }
+
+            })
+        }
+        console.log(answer)
+    
+    } , [answer])
+
   return (
     <View style={questionStyle.questionContainer}>
         <View >
             <Text style={questionStyle.questionText} >{question.question}</Text>
+        </View>
+        <View style={questionStyle.options}>
+
+            <View style={{flex:1 , gap:10 , alignItems:"flex-start" }}>
+                <RadioGroup 
+                radioButtons={options}
+                onPress={(data)=>setAnswer(data)}
+                selectedId = {answer}
+                />
+            </View>
+
         </View>
 
     </View>
@@ -19,12 +117,14 @@ const questionStyle = StyleSheet.create({
         flex:1,
         gap:20,
         justifyContent:"center",
-        backgroundColor:"yellow",
         padding:10
     },
     questionText:{
         fontSize:18,
         color:"black",
+    },
+    options:{
+        flex:1,
     }
 })
 
