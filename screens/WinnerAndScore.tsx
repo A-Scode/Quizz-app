@@ -1,12 +1,13 @@
-import { Dimensions, ImageBackground, StyleSheet, View } from "react-native"
+import { Button, Dimensions, ImageBackground, StyleSheet, View } from "react-native"
 import { Text } from "react-native"
 import { useRoute, useNavigation } from '@react-navigation/native';
 import LinearGradient from "react-native-linear-gradient";
 import { useEffect, useMemo, useState } from "react";
 import { styles } from './Test';
 import {Table , Row , Rows } from "react-native-table-component";
+import { initialScore } from "../App";
 
-const WinnerAndScore = () => {
+const WinnerAndScore = ({Score , handleScoreChange}:any) => {
     const params:any = useRoute().params;
     const naviagation = useNavigation();
     
@@ -69,6 +70,12 @@ const WinnerAndScore = () => {
         console.log(winnerScreen)
     },[]);
 
+    function startAgain(){
+      handleScoreChange(initialScore);
+      naviagation.navigate("Name");
+    }
+
+
   return (
     winnerScreen
     ?winScreen
@@ -80,6 +87,7 @@ const WinnerAndScore = () => {
             <Row data={["User" , "Score"]}  style={scoreStyle.tableHead} textStyle={scoreStyle.tableTextHeadingStyle} />
             <Rows data={[[params.Score.user1.name,params.Score.user1.score],[params.Score.user2.name, params.Score.user2.score]]}  style={scoreStyle.tableCell} textStyle={scoreStyle.tableTextStyle} />
         </Table>
+        <Button title="Start Again" onPress={startAgain} />
     </View>
   );
 }

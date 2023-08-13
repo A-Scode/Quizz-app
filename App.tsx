@@ -26,6 +26,7 @@ import Test from './screens/Test';
 import TieBreaker from './screens/TieBreaker';
 import { QueryClientProvider, QueryClient, useQuery } from 'react-query';
 import WinnerAndScore from './screens/WinnerAndScore';
+import Name from './screens/Name';
 
 
 const Stack = createNativeStackNavigator();
@@ -67,12 +68,20 @@ function App(): JSX.Element {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerStyle:{
           backgroundColor:Colors.dark,
-        }, headerTitleStyle:{color:Colors.white,}}} >
+        }, headerTitleStyle:{color:Colors.white,},
+        headerBackVisible:false,
+        headerTitleAlign:"center"
+        }} >
+          <Stack.Screen name="Name">
+            {props=><Name {...props} Score={Score} handleScoreChange={handleScoreChange} />}
+          </Stack.Screen>
           <Stack.Screen name="Test" initialParams={{user:"user1" , tie:false}}>
             {props=><Test {...props} Score={Score} handleScoreChange={handleScoreChange} />}
-            </Stack.Screen>
+          </Stack.Screen>
           <Stack.Screen name="Tie Breaker"  component={TieBreaker}/>
-          <Stack.Screen name="Winner"  component={WinnerAndScore} />
+          <Stack.Screen name="Winner"  >
+            {props=><WinnerAndScore {...props} handleScoreChange={handleScoreChange} Score={Score} />}
+          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
 })
 
 
-export default function Test({navigation , Score , handleScoreChange  }){
+export default function Test({navigation , Score , handleScoreChange  }:any){
 
     function handleSubmit(){
         if ( Score.user1.score === Score.user2.score){
@@ -54,7 +54,7 @@ export default function Test({navigation , Score , handleScoreChange  }){
     }
 
 
-    const {user , tie} = useRoute().params;
+    const {user , tie}:any = useRoute().params;
     console.log("user:",user, "tie:" ,tie);
 
     const {isFetching , data , error} = useQuery("questions" , ()=>fetch("https://opentdb.com/api.php?amount=10").then(res=>res.json()));

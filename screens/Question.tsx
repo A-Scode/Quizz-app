@@ -6,7 +6,7 @@ import { styles } from './Test';
 import { Button } from 'react-native';
 import { useEffect , useState } from 'react';
 import RadioGroup,{ RadioButton , RadioButtonProps } from 'react-native-radio-buttons-group';
-function Question({question , Score , handleScoreChange , user}) {
+function Question({question , Score , handleScoreChange , user}:any) {
 
     const [options , setOptions]  = useState<RadioButtonProps[]>([]);
     const [answer , setAnswer] = useState<string|undefined>();
