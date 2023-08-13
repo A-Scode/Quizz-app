@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
 })
 
 
-export default function Test({navigation , Score , handleScoreChange }){
+export default function Test({navigation , Score , handleScoreChange  }){
 
     const {user} = useRoute().params;
     console.log(user)
@@ -64,12 +64,16 @@ export default function Test({navigation , Score , handleScoreChange }){
             
             </ScrollView>
             <View>
+                {
+                user==="user1"?
                 <Button 
                 title="Submit and start User 2"
                 onPress={()=>navigation.push("Test" , {
                     user:"user2"
                 })}
-                />
+                />:
+                <Button title="Submit"  />
+                }
             </View>
         </ScrollView>
     )

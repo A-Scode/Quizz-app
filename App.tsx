@@ -37,16 +37,14 @@ function App(): JSX.Element {
   const [Score , setScore] = useState({
     user1:{
       complete:false,
-      questions:[],
+      questions:new Set(),
       correct:0,
-      incorrect : 0,
       score : 0,
     },
     user2:{
       complete:false,
-      questions:[],
+      questions:new Set(),
       correct:0,
-      incorrect : 0,
       score : 0,
     },
   })

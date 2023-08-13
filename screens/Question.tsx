@@ -9,7 +9,7 @@ import RadioGroup,{ RadioButton , RadioButtonProps } from 'react-native-radio-bu
 function Question({question , Score , handleScoreChange , user}) {
 
     const [options , setOptions]  = useState<RadioButtonProps[]>([]);
-    const [answer , setAnswer] = useState<string|undefined>("1");
+    const [answer , setAnswer] = useState<string|undefined>();
 
     useEffect( ()=>{
 
@@ -45,6 +45,7 @@ function Question({question , Score , handleScoreChange , user}) {
     }, [question])
 
     useEffect(()=>{
+        if ( answer){
         let ans = options.find((item)=>item.id === answer);
         if ( ans?.value === question.correct_answer){
             user==="user1"?
@@ -53,7 +54,8 @@ function Question({question , Score , handleScoreChange , user}) {
                 user1:{
                     ...Score.user1,
                     correct : Score.user1.correct+1,
-                    score : Score.user1.score+5
+                    score : Score.user1.score+5,
+                    questions : new Set([...Score.user1.questions ,ans?.id])
                 }
             })
             :
@@ -66,13 +68,13 @@ function Question({question , Score , handleScoreChange , user}) {
                 }
 
             })
-        }else{
+        }else if ( ans?.value != question.correct_answer){
             user==="user1"?
             handleScoreChange({
                 ...Score ,
                 user1:{
                     ...Score.user1,
-                    incorrect : Score.user1.incorrect+1,
+                    correct : Score.user1.correct-1,
                     score : Score.user1.score-2
                 }
             })
@@ -81,14 +83,44 @@ function Question({question , Score , handleScoreChange , user}) {
                 ...Score ,
                 user2:{
                     ...Score.user2,
-                    incorrect : Score.user2.incorrect+1,
+                    correct : Score.user2.correct-1,
                     score : Score.user2.score-2
                 }
 
             })
         }
         console.log(answer)
-    
+        if ( question.type === "boolean"){
+            setOptions([
+            {
+                id: '1', // acts as primary key, should be unique and non-empty string
+                label: 'True',
+                value: 'True',
+                labelStyle:{ color :"black"},
+                disabled:true,
+            },
+            {
+                id: '2', // acts as primary key, should be unique and non-empty string
+                label: 'False',
+                value: 'False',
+                labelStyle:{ color :"black"},
+                disabled:true,
+            },
+        ])
+    }else{
+        let opt = [ question.correct_answer, ...question.incorrect_answers]
+        let radioOpitons:RadioButtonProps[] = [];
+        opt.map((item, i)=>{radioOpitons.push({
+            id : String(i+1),
+            label: item,
+            value : item,
+            labelStyle: {color:"black" , flexWrap:"wrap"},
+            disabled:true,
+            })})
+
+            setOptions(radioOpitons);
+        }
+    }
     } , [answer])
 
   return (
