@@ -10,6 +10,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import { Button } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import {useState} from 'react';
 
 export const styles = StyleSheet.create({
     mainContainer:{
@@ -34,32 +35,65 @@ export const styles = StyleSheet.create({
 
 export default function Test({navigation , Score , handleScoreChange  }){
 
-    const {user} = useRoute().params;
-    console.log(user)
+    function handleSubmit(){
+        if ( Score.user1.score === Score.user2.score){
+            navigation.push("Test",{
+                user:"user1",tie:true
+            });
+        }else if ( Score.user1.score > Score.user2.score ){
+            navigation.navigate("Winner",{
+                Score,
+                winner : "user1",
+            });
+        }else if ( Score.user1.score < Score.user2.score ){
+            navigation.navigate("Winner",{
+                Score,
+                winner : "user2",
+            });
+        } 
+    }
 
-    const {isLoading , data , error} = useQuery("questions" , ()=>fetch("https://opentdb.com/api.php?amount=10").then(res=>res.json()));
+
+    const {user , tie} = useRoute().params;
+    console.log("user:",user, "tie:" ,tie);
+
+    const {isFetching , data , error} = useQuery("questions" , ()=>fetch("https://opentdb.com/api.php?amount=10").then(res=>res.json()));
     
     // const {Score , handleScoreChange , user} = useRoute().params;
 
     useEffect( ()=>{console.log(data?.results)}, [data])
+
+    if( tie ){
+        navigation.setOptions({title:"Tie Breaker"})
+    }
+
+    const [Tie , setTie] = useState(tie);
+    useEffect(()=>{
+        setTimeout(()=>setTie(false),2000)
+    } , [Tie])
 
     const Stack = createStackNavigator();
     // const navigate = useNavigation();
 
     useEffect(()=>{console.log(Score)} , [Score])
 
-    return (
+    return (Tie?
+        <View style={{flex: 1,justifyContent: 'center',alignItems:"center" , backgroundColor:"#3683f6"}}>
+            <Text style={{fontSize:50 , fontWeight:"500", color:"white"}}>Tie Breaker</Text>
+        </View>
+        :
         <ScrollView contentContainerStyle={styles.mainContainer}>
-            <View ><Text style={{color:"black"}}>{JSON.stringify(Score,undefined,4)}</Text></View>
+            {/* <View ><Text style={{color:"black"}}>{JSON.stringify(Score,undefined,4)}</Text></View> */}
             <View style={styles.viewHeading}>
-                <Text style={styles.textHeading}>{user==="user1"?"User 1":"User 2"}</Text>
+                <Text style={styles.textHeading}>{user==="user1"?Score.user1.name:Score.user2.name}</Text>
             </View>
             <ScrollView  contentContainerStyle={{justifyContent: 'space-between',}} style={{gap:20 , flex:1}} >
             
             {
-                !isLoading && data.results.map(
+                !isFetching ? data.results.map(
                     (item:any, index:any)=>(<Question key={index} Score={Score} handleScoreChange={handleScoreChange} user={user} question={item} />)
-                    )
+                    ):
+                    <Text style={{color:"black"}}>Loading...</Text>
             }
             
             </ScrollView>
@@ -72,7 +106,7 @@ export default function Test({navigation , Score , handleScoreChange  }){
                     user:"user2"
                 })}
                 />:
-                <Button title="Submit"  />
+                <Button title="Submit" onPress={handleSubmit}  />
                 }
             </View>
         </ScrollView>

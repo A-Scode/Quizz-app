@@ -126,7 +126,7 @@ function Question({question , Score , handleScoreChange , user}) {
   return (
     <View style={questionStyle.questionContainer}>
         <View >
-            <Text style={questionStyle.questionText} >{question.question}</Text>
+            <Text style={questionStyle.questionText} >{decodeURIComponent(question.question)}</Text>
         </View>
         <View style={questionStyle.options}>
 
