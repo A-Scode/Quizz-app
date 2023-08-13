@@ -15,7 +15,6 @@ const WinnerAndScore = ({Score , handleScoreChange}:any) => {
         fullContainer:{
             paddingTop:50,
             flex:1,
-            // justifyContent: 'center',
             alignItems: 'center',
             gap:50,
         },

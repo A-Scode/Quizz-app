@@ -135,6 +135,7 @@ function Question({question , Score , handleScoreChange , user}:any) {
                 radioButtons={options}
                 onPress={(data)=>setAnswer(data)}
                 selectedId = {answer}
+                containerStyle={{flex:1 , justifyContent: 'center',alignItems: 'flex-start'}}
                 />
             </View>
 
@@ -149,7 +150,9 @@ const questionStyle = StyleSheet.create({
         flex:1,
         gap:20,
         justifyContent:"center",
-        padding:10
+        padding:10,
+        backgroundColor : "#fff25f36",
+        borderRadius: 20 ,
     },
     questionText:{
         fontSize:18,

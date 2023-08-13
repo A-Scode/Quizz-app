@@ -87,7 +87,7 @@ export default function Test({navigation , Score , handleScoreChange  }:any){
             <View style={styles.viewHeading}>
                 <Text style={styles.textHeading}>{user==="user1"?Score.user1.name:Score.user2.name}</Text>
             </View>
-            <ScrollView  contentContainerStyle={{justifyContent: 'space-between',}} style={{gap:20 , flex:1}} >
+            <ScrollView  contentContainerStyle={{justifyContent: 'space-between',gap:20}}  >
             
             {
                 !isFetching ? data.results.map(
